@@ -30,3 +30,639 @@
   #stars-canvas {
     position: fixed; inset: 0; z-index: 0;
     pointer-events: none;
+  }
+
+  /* === ENTRY SCREEN === */
+  #entry-screen {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at center, #1a003a 0%, #060010 100%);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  #entry-screen.hidden {
+    opacity: 0; pointer-events: none; transform: scale(1.05);
+  }
+
+  .orb-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,215,0,0.15);
+    animation: orbit-spin 20s linear infinite;
+  }
+  .orb-ring:nth-child(1) { width: 300px; height: 300px; animation-duration: 20s; }
+  .orb-ring:nth-child(2) { width: 420px; height: 420px; animation-duration: 30s; animation-direction: reverse; border-color: rgba(0,212,255,0.12); }
+  .orb-ring:nth-child(3) { width: 540px; height: 540px; animation-duration: 45s; border-color: rgba(255,0,255,0.08); }
+
+  @keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .entry-badge {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px var(--gold));
+  }
+
+  .entry-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    font-weight: 900;
+    color: transparent;
+    background: linear-gradient(135deg, var(--gold), var(--gold2), #FFF8DC, var(--gold));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shimmer-text 4s ease infinite;
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 2px;
+    text-shadow: none;
+    margin-bottom: 0.5rem;
+    position: relative; z-index: 2;
+  }
+
+  .entry-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 2.5rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    position: relative; z-index: 2;
+  }
+
+  @keyframes shimmer-text {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  #enter-btn {
+    position: relative; z-index: 2;
+    padding: 18px 52px;
+    font-size: 1.25rem;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    color: #0A0015;
+    background: linear-gradient(135deg, var(--gold), var(--gold2), var(--gold));
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,165,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+    animation: btn-pulse 2.5s ease-in-out infinite, shimmer-text 3s ease infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #enter-btn:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 0 50px rgba(255,215,0,0.9), 0 0 100px rgba(255,165,0,0.5);
+  }
+  #enter-btn:active { transform: scale(0.97); }
+
+  @keyframes btn-pulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,165,0,0.3); }
+    50% { box-shadow: 0 0 50px rgba(255,215,0,0.9), 0 0 100px rgba(255,165,0,0.6), 0 0 150px rgba(255,215,0,0.2); }
+  }
+
+  /* === MAIN CONTENT === */
+  #main-content {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    padding: 0 20px 60px;
+    opacity: 0;
+    transition: opacity 1s ease 0.3s;
+  }
+  #main-content.visible { opacity: 1; }
+
+  /* === FLOATING WORDS === */
+  #words-container {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 20;
+    overflow: hidden;
+  }
+
+  .fly-word {
+    position: absolute;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.2rem, 4vw, 2.5rem);
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--gold);
+    text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold2);
+    white-space: nowrap;
+    animation: word-fly linear forwards;
+    opacity: 0;
+    letter-spacing: 3px;
+  }
+
+  @keyframes word-fly {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5) rotate(var(--rot)); }
+    10%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-100vh) scale(1.3) rotate(calc(var(--rot) + 15deg)); }
+  }
+
+  /* === HERO SECTION === */
+  .hero {
+    margin-top: 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .crown-emoji {
+    font-size: 4rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px var(--gold));
+    margin-bottom: 10px;
+  }
+
+  .hero-label {
+    font-size: 0.85rem;
+    letter-spacing: 5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .hero-title-3d {
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow:
+      0 1px 0 #ccc,
+      0 2px 0 #c9c9c9,
+      0 3px 0 #bbb,
+      0 4px 0 #b9b9b9,
+      0 5px 0 #aaa,
+      0 6px 1px rgba(0,0,0,0.1),
+      0 0 5px rgba(255,215,0,0.3),
+      0 1px 3px rgba(0,0,0,0.3),
+      0 3px 5px rgba(0,0,0,0.2),
+      0 5px 10px rgba(0,0,0,0.25),
+      0 10px 10px rgba(0,0,0,0.2),
+      0 20px 20px rgba(0,0,0,0.15),
+      0 0 40px rgba(255,215,0,0.6),
+      0 0 80px rgba(255,165,0,0.3);
+    animation: hero-glow 3s ease-in-out infinite;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  @keyframes hero-glow {
+    0%, 100% { text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 5px 0 #aaa, 0 0 40px rgba(255,215,0,0.6), 0 0 80px rgba(255,165,0,0.3); }
+    50% { text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 5px 0 #aaa, 0 0 60px rgba(255,215,0,0.9), 0 0 120px rgba(255,165,0,0.6), 0 0 200px rgba(255,215,0,0.2); }
+  }
+
+  .hero-date {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 4px;
+    margin-top: 10px;
+  }
+
+  /* === DIVIDER === */
+  .divider {
+    width: 100%;
+    max-width: 500px;
+    height: 1px;
+    margin: 40px auto;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), var(--gold), transparent);
+    position: relative;
+  }
+  .divider::after {
+    content: '✦';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gold);
+    font-size: 1.2rem;
+    background: var(--deep);
+    padding: 0 12px;
+    filter: drop-shadow(0 0 8px var(--gold));
+  }
+
+  /* === POEM CARD === */
+  .poem-card {
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto 30px;
+    position: relative;
+    perspective: 1000px;
+  }
+
+  .poem-card-inner {
+    background: linear-gradient(135deg,
+      rgba(255,215,0,0.06) 0%,
+      rgba(155,89,182,0.08) 40%,
+      rgba(0,212,255,0.06) 100%
+    );
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 24px;
+    padding: 40px 36px;
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 0 40px rgba(255,215,0,0.08),
+      0 20px 60px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.07);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .poem-card-inner:hover {
+    transform: translateY(-4px) rotateX(1deg);
+    box-shadow: 0 0 60px rgba(255,215,0,0.15), 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .poem-card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, transparent 50%, rgba(0,212,255,0.03) 100%);
+    border-radius: 24px;
+    pointer-events: none;
+  }
+
+  .card-corner {
+    position: absolute;
+    width: 60px; height: 60px;
+    opacity: 0.3;
+  }
+  .card-corner.tl { top: 12px; right: 12px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); border-radius: 0 8px 0 0; }
+  .card-corner.br { bottom: 12px; left: 12px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); border-radius: 0 0 0 8px; }
+
+  .poem-icon {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+    display: block;
+    animation: float 4s ease-in-out infinite 0.5s;
+  }
+
+  .poem-main {
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+    position: relative;
+    text-shadow: 0 0 20px rgba(255,215,0,0.4);
+  }
+
+  .poem-main::before {
+    content: '❝';
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: 3rem;
+    color: var(--gold);
+    opacity: 0.2;
+    font-family: Georgia, serif;
+  }
+
+  .poem-secondary-label {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    text-align: center;
+    margin-bottom: 16px;
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+
+  .poem-secondary {
+    font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    line-height: 2.1;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 22px;
+  }
+
+  .poem-secondary span {
+    display: block;
+    transition: color 0.3s;
+  }
+  .poem-secondary span:hover { color: rgba(255,255,255,0.95); }
+
+  /* === FLOATING HEARTS === */
+  .heart-float {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.5rem;
+    z-index: 5;
+    animation: heart-rise linear forwards;
+  }
+  @keyframes heart-rise {
+    0%   { opacity: 0.9; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80vh) scale(0.5) rotate(15deg); }
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+  }
+
+  /* === CRIY (black) === */
+  .criy {
+    color: #000 !important;
+    -webkit-text-stroke: 1px #fff !important;
+    text-shadow: 0 0 8px rgba(255,255,255,0.9), 0 0 18px rgba(255,215,0,0.6) !important;
+    font-weight: 900;
+    margin-inline-start: 0.35em;
+    letter-spacing: 3px;
+  }
+
+  /* === UTILS === */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* === AUDIO BAR === */
+  #audio-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 50px;
+    padding: 10px 22px;
+    display: flex; align-items: center; gap: 12px;
+    backdrop-filter: blur(20px);
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.5s ease 1s;
+  }
+  #audio-bar.visible { opacity: 1; }
+  .eq-bar {
+    width: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+    animation: eq-dance 0.8s ease-in-out infinite;
+  }
+  .eq-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .eq-bar:nth-child(2) { height: 16px; animation-delay: 0.15s; }
+  .eq-bar:nth-child(3) { height: 22px; animation-delay: 0.3s; }
+  .eq-bar:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+  .eq-bar:nth-child(5) { height: 9px; animation-delay: 0.6s; }
+  @keyframes eq-dance {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+  .audio-label {
+    font-size: 0.8rem;
+    color: rgba(255,215,0,0.7);
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  /* Particle burst */
+  .particle {
+    position: fixed;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 200;
+    animation: particle-burst 1s ease-out forwards;
+  }
+  @keyframes particle-burst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- ENTRY SCREEN -->
+<div id="entry-screen">
+  <div class="orb-ring"></div>
+  <div class="orb-ring"></div>
+  <div class="orb-ring"></div>
+  <div class="entry-badge">👑</div>
+  <div class="entry-title">لك وحدك</div>
+  <div class="entry-subtitle">رسالة خاصة • إلى صديقي المفضّل</div>
+  <button id="enter-btn" onclick="enterExperience(event)">✨ اضغط هنا أيها الأفضل</button>
+</div>
+
+<!-- FLOATING WORDS -->
+<div id="words-container"></div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <div class="hero">
+    <span class="crown-emoji">👑</span>
+    <div class="hero-label">صديقي المفضّل</div>
+    <div class="hero-title-3d">أنتَ الأفضل</div>
+    <div class="hero-date">✦ &nbsp; MY FAVORITE FRIEND &nbsp; ✦</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Card 1 -->
+  <div class="poem-card">
+    <div class="poem-card-inner">
+      <div class="card-corner tl"></div>
+      <div class="card-corner br"></div>
+      <span class="poem-icon">💛</span>
+      <div class="poem-main">
+        أنتَ مو بسْ صديق<br>
+        أنتَ الشخصُ الي ما أقدرْ أتخلّى عنهُ
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="poem-card">
+    <div class="poem-card-inner">
+      <div class="card-corner tl"></div>
+      <div class="card-corner br"></div>
+      <span class="poem-icon">🌙</span>
+      <div class="poem-secondary-label">✦ &nbsp; من القلب &nbsp; ✦</div>
+      <div class="poem-secondary">
+        <span>وَلِي صديقٌ عرفتُهُ ذاتَ يومٍ صُدفةً</span>
+        <span>وأصبحَ لِيَ الأخَ والرفيقُ</span>
+        <span>&nbsp;</span>
+        <span>شخصٌ لا يملُّ من كلامي</span>
+        <span>وإذا أرادَ الكلامَ لا ملَلتُهُ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">✦ &nbsp; YOU THE BEST <span class="criy">CRIY</span> &nbsp; ✦</div>
+</div>
+
+<!-- AUDIO BAR -->
+<div id="audio-bar">
+  <div class="eq-bar"></div>
+  <div class="eq-bar"></div>
+  <div class="eq-bar"></div>
+  <div class="eq-bar"></div>
+  <div class="eq-bar"></div>
+  <span class="audio-label">🎵 &nbsp; YOU THE BEST <span class="criy">CRIY</span></span>
+</div>
+
+<audio id="bg-audio" loop>
+  <source src="https://files.catbox.moe/4e0gj7.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // ─── STARS ───────────────────────────────────────────────────
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.2,
+        alpha: Math.random(),
+        speed: Math.random() * 0.3 + 0.05,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleDir: Math.random() > 0.5 ? 1 : -1,
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let s of stars) {
+      s.alpha += s.twinkleSpeed * s.twinkleDir;
+      if (s.alpha > 1) { s.alpha = 1; s.twinkleDir = -1; }
+      if (s.alpha < 0.1) { s.alpha = 0.1; s.twinkleDir = 1; }
+      s.y -= s.speed;
+      if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(drawStars);
+  }
+
+  resizeCanvas(); initStars(); drawStars();
+  window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+  // ─── FLYING WORDS ────────────────────────────────────────────
+  const CRIY = ' <span class="criy">CRIY</span>';
+  const words = [
+    'YOU THE BEST' + CRIY,
+    'الأفضل',
+    'YOU THE BEST' + CRIY,
+    '✦ YOU THE BEST' + CRIY + ' ✦',
+    'الأفضل دائماً'
+  ];
+  let wordInterval = null;
+
+  function spawnWord() {
+    const container = document.getElementById('words-container');
+    const el = document.createElement('div');
+    el.className = 'fly-word';
+    el.innerHTML = words[Math.floor(Math.random() * words.length)];
+    const rot = (Math.random() - 0.5) * 25;
+    el.style.setProperty('--rot', rot + 'deg');
+    el.style.left = (Math.random() * 85 + 5) + '%';
+    el.style.top = (Math.random() * 40 + 55) + '%';
+    const dur = (Math.random() * 3 + 4).toFixed(1) + 's';
+    el.style.animationDuration = dur;
+    el.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+    container.appendChild(el);
+    setTimeout(() => el.remove(), parseFloat(dur) * 1000 + 200);
+  }
+
+  // ─── HEARTS ──────────────────────────────────────────────────
+  const heartEmojis = ['💛', '🌟', '✨', '💫', '⭐', '🤍', '💎'];
+
+  function spawnHeart() {
+    const el = document.createElement('div');
+    el.className = 'heart-float';
+    el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    el.style.left = (Math.random() * 90 + 5) + '%';
+    el.style.bottom = '0';
+    el.style.animationDuration = (Math.random() * 4 + 5) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 9500);
+  }
+
+  // ─── PARTICLES ON CLICK ──────────────────────────────────────
+  function burst(x, y) {
+    const colors = ['#FFD700','#FFA500','#00FFFF','#FF00FF','#ffffff'];
+    for (let i = 0; i < 16; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const angle = (i / 16) * Math.PI * 2;
+      const dist = Math.random() * 100 + 50;
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1000);
+    }
+  }
+
+  // ─── ENTER EXPERIENCE ────────────────────────────────────────
+  function enterExperience(e) {
+    burst(e.clientX, e.clientY);
+
+    // Play audio
+    const audio = document.getElementById('bg-audio');
+    audio.volume = 0.85;
+    audio.play().catch(() => {});
+
+    // Hide entry
+    document.getElementById('entry-screen').classList.add('hidden');
+
+    // Show content
+    document.getElementById('main-content').classList.add('visible');
+
+    // Show audio bar
+    setTimeout(() => {
+      document.getElementById('audio-bar').classList.add('visible');
+    }, 800);
+
+    // Start words
+    wordInterval = setInterval(spawnWord, 600);
+    for (let i = 0; i < 6; i++) setTimeout(spawnWord, i * 200);
+
+    // Start hearts
+    setInterval(spawnHeart, 1800);
+    for (let i = 0; i < 5; i++) setTimeout(spawnHeart, i * 400);
+  }
+
+  // Click burst on main content
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('entry-screen').classList.contains('hidden')) return;
+    burst(e.clientX, e.clientY);
+    spawnHeart();
+  });
+</script>
+</body>
+</html>
